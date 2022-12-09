@@ -5,9 +5,10 @@ import { useContract } from "../hooks/useContract";
 
 const Home: NextPage = () => {
   const [currentAccount, connectWallet] = useContext(CurrentAccountContext);
-  const { contract } = useContract({ currentAccount });
+  const { contract, txAllowList } = useContract({ currentAccount });
 
   const [value, setValue] = useState("");
+  const [address, setAddress] = useState("");
 
   const getValue = useCallback(async () => {
     if (!currentAccount) {
@@ -39,6 +40,21 @@ const Home: NextPage = () => {
     }
   }, [currentAccount, contract]);
 
+  const enable = useCallback(async () => {
+    if (!currentAccount) {
+      alert("connect wallet");
+      return;
+    }
+    if (!txAllowList) return;
+    try {
+      const txn = await txAllowList.setEnabled(address);
+      txn.wait();
+      alert("success");
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
+  }, [currentAccount, txAllowList, address]);
+
   // useEffect(() => {
   //   getValue();
   // }, [getValue]);
@@ -50,10 +66,17 @@ const Home: NextPage = () => {
       ) : (
         <div>
           {" "}
-          {"Connected to " + currentAccount}{" "}
+          {"Connected to " + currentAccount}
+          <p></p>
           <button onClick={getValue}>getValue</button>
           <button onClick={changeValue}>changeValue</button>
           <p>num: {value}</p>
+          <div>
+            {"address to enable: "}
+            <input type="text" onChange={(e) => setAddress(e.target.value)} />
+          </div>
+          <p>address: {address}</p>
+          <button onClick={enable}>enable</button>
         </div>
       )}
     </div>
