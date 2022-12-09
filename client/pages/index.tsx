@@ -51,6 +51,7 @@ const Home: NextPage = () => {
       txn.wait();
       alert("success");
     } catch (error) {
+      // https://www.freecodecamp.org/news/object-object-in-javascript-meaning-in-js/
       alert(JSON.stringify(error));
     }
   }, [currentAccount, txAllowList, address]);
