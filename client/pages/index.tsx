@@ -55,6 +55,21 @@ const Home: NextPage = () => {
     }
   }, [currentAccount, txAllowList, address]);
 
+  const non = useCallback(async () => {
+    if (!currentAccount) {
+      alert("connect wallet");
+      return;
+    }
+    if (!txAllowList) return;
+    try {
+      const txn = await txAllowList.setNone(address);
+      txn.wait();
+      alert("success");
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
+  }, [currentAccount, txAllowList, address]);
+
   // useEffect(() => {
   //   getValue();
   // }, [getValue]);
@@ -77,6 +92,7 @@ const Home: NextPage = () => {
           </div>
           <p>address: {address}</p>
           <button onClick={enable}>enable</button>
+          <button onClick={non}>non</button>
         </div>
       )}
     </div>
