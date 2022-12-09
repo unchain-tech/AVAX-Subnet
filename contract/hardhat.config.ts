@@ -21,7 +21,7 @@ const config: HardhatUserConfig = {
           : [],
     },
     local: {
-      url: "http://127.0.0.1:9650/ext/bc/Dt1JxLbGtGVa9HpfoWXGrDLozmjK8wZtu9WbFzYN6mxUw2Fe2/rpc",
+      url: "http://127.0.0.1:9654/ext/bc/2R4qowMXTHwbCLR9sq6zifRE4vgTPPbfJaNUYUzmDMeNoJqvHj/rpc",
       gasPrice: 225000000000,
       chainId: 321123,
       accounts:
