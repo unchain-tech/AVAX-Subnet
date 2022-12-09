@@ -35,7 +35,7 @@ const Home: NextPage = () => {
       txn.wait();
       alert("success");
     } catch (error) {
-      alert(error);
+      alert(JSON.stringify(error));
     }
   }, [currentAccount, contract]);
 
