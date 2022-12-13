@@ -37,6 +37,10 @@ contract Bank {
         require(success, "Failed to send AVAX");
     }
 
+    function getBill(uint256 _id) public view returns (Bill memory) {
+        return allBills[_id];
+    }
+
     function request(uint256 _price, uint256 _expirationDate) public {
         require(_expirationDate > block.timestamp); // timestampは正確な値ではありません。
 
