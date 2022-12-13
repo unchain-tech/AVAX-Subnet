@@ -19,16 +19,17 @@ describe("Bank", function () {
 
   describe("request", function () {
     it("Correct bill requested", async function () {
-      const { bank, deployAccount } = await loadFixture(deployContract);
+      const { bank, userAccounts } = await loadFixture(deployContract);
 
       const oneWeekInSecond = 60 * 60 * 24 * 7;
 
+      const account = userAccounts[0];
       const price = 100;
       const expirationDate = BigNumber.from(Date.now())
         .div(1000) // in second
         .add(oneWeekInSecond); // one week later
 
-      await bank.request(price, expirationDate);
+      await bank.connect(account).request(price, expirationDate);
 
       const bill = await bank.getBill(0);
 
@@ -36,10 +37,40 @@ describe("Bank", function () {
       expect(bill.price).to.equal(price);
       expect(bill.expirationDate).to.equal(expirationDate);
       expect(bill.status).to.equal(0);
-      expect(bill.borrower).to.equal(deployAccount.address);
+      expect(bill.borrower).to.equal(account.address);
       expect(bill.lender).to.equal(
         "0x0000000000000000000000000000000000000000"
       );
+    });
+  });
+
+  describe("lend", function () {
+    it("Bill is correctly lend.", async function () {
+      const { bank, userAccounts } = await loadFixture(deployContract);
+
+      const oneWeekInSecond = 60 * 60 * 24 * 7;
+
+      const borrower = userAccounts[0];
+      const lender = userAccounts[1];
+      const price = 100;
+      const expirationDate = BigNumber.from(Date.now())
+        .div(1000) // in second
+        .add(oneWeekInSecond); // one week later
+
+      await bank.connect(borrower).request(price, expirationDate);
+
+      await expect(
+        bank.connect(lender).lend(0, { value: price } as Overrides)
+      ).to.changeEtherBalances([borrower, lender], [price, -price]);
+
+      const bill = await bank.getBill(0);
+
+      expect(bill.id).to.equal(0);
+      expect(bill.price).to.equal(price);
+      expect(bill.expirationDate).to.equal(expirationDate);
+      expect(bill.status).to.equal(1);
+      expect(bill.borrower).to.equal(borrower.address);
+      expect(bill.lender).to.equal(lender.address);
     });
   });
 });
