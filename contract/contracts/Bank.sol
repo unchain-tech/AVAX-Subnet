@@ -68,7 +68,7 @@ contract Bank {
     }
 
     //TODO: 利子の実装, 割引の実装
-    function repayment(uint256 _id) public payable activeBill(_id) {
+    function repay(uint256 _id) public payable activeBill(_id) {
         Bill storage bill = allBills[_id];
 
         require(msg.value == bill.price, "Not match amount of price");
