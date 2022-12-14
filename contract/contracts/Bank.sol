@@ -2,86 +2,129 @@
 pragma solidity ^0.8.17;
 
 contract Bank {
+    // 手形の属性です。
+    struct Bill {
+        uint256 id;
+        uint256 price;
+        uint256 timestamp;
+        address issuer;
+        address recipient;
+        BillStatus status;
+    }
+
+    // 手形の状態を表します。
     enum BillStatus {
-        Requesting,
-        Lending,
+        Active,
         Completed,
         Dishonored
     }
 
-    struct Bill {
-        uint256 id;
-        uint256 price;
-        uint256 expirationDate;
-        BillStatus status;
-        address borrower;
-        address lender;
-    }
+    // 全ての手形を保存します。
+    Bill[] public allBills;
 
-    Bill[] allBills;
+    // 不渡りを起こしたアドレスを保存します。
+    address[] public dishonoredAddresses;
 
-    modifier activeBill(uint256 id) {
-        require(
-            allBills[id].status != BillStatus.Completed,
-            "Bill is completed"
-        );
-        require(
-            allBills[id].status != BillStatus.Dishonored,
-            "Bill is Dishonored"
-        );
-        _;
-    }
+    // 各アドレスがコントラクトにロックしたトークンの数を保有します。
+    mapping(address => uint256) private balance;
+
+    // 手形の期間を定数で用意します。
+    uint256 public constant term = 1 days * 60;
+
+    // 割引金利
+    uint256 public constant discountRate = 10;
+
+    // 手形手数料
+    uint256 public constant interestRate = 10;
 
     function sendAvax(address payable _to, uint256 _amount) private {
         (bool success, ) = (_to).call{value: _amount}("");
         require(success, "Failed to send AVAX");
     }
 
-    function getBill(uint256 _id) public view returns (Bill memory) {
-        return allBills[_id];
+    // function getNumberOfBills() public view returns (uint256) {
+    //     return allBills.length;
+    // }
+
+    // function getBill(uint256 _id) public view returns (Bill memory) {
+    //     return allBills[_id];
+    // }
+
+    function getBalance() public view returns (uint256) {
+        return balance[msg.sender];
     }
 
-    function request(uint256 _price, uint256 _expirationDate) public {
-        require(_expirationDate > block.timestamp); // timestampは正確な値ではありません。
+    function beforeDueDate(uint256 _id) public view returns (bool) {
+        Bill memory bill = allBills[_id];
 
+        if (bill.timestamp + term < block.timestamp) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function getAmountToCashBill(uint256 _id) public view returns (uint256) {
+        Bill memory bill = allBills[_id];
+
+        if (beforeDueDate(_id)) {
+            return (bill.price * (100 - discountRate)) / 100;
+        }
+
+        return bill.price;
+    }
+
+    function getAmountToDemandPayment(uint256 _id)
+        public
+        view
+        returns (uint256)
+    {
+        Bill memory bill = allBills[_id];
+        return (bill.price * (100 + discountRate)) / 100;
+    }
+
+    function issueBill(uint256 _price, address _recipient) public {
         Bill memory bill = Bill(
             allBills.length,
             _price,
-            _expirationDate,
-            BillStatus.Requesting,
+            block.timestamp, // block.timestampは正確な値ではありません。
             msg.sender,
-            address(0)
+            _recipient,
+            BillStatus.Active
         );
 
         allBills.push(bill);
     }
 
-    function lend(uint256 _id) public payable activeBill(_id) {
-        Bill storage bill = allBills[_id];
+    function cashBill(uint256 _id) public payable {
+        Bill memory bill = allBills[_id];
 
-        require(msg.value == bill.price, "Not match amount of price");
+        require(bill.status == BillStatus.Active, "Bill is not active");
 
-        bill.status = BillStatus.Lending;
-        bill.lender = msg.sender;
+        require(bill.recipient == msg.sender, "Your are not recipient");
 
-        sendAvax(payable(bill.borrower), bill.price);
+        uint256 amount = getAmountToCashBill(_id);
+
+        sendAvax(payable(msg.sender), amount);
     }
 
-    //TODO: 利子の実装, 割引の実装
-    function repay(uint256 _id) public payable activeBill(_id) {
-        Bill storage bill = allBills[_id];
-
-        require(msg.value == bill.price, "Not match amount of price");
-        bill.status = BillStatus.Completed;
-
-        sendAvax(payable(bill.lender), bill.price);
+    function lockToken() public payable {
+        balance[msg.sender] = msg.value;
     }
 
-    function claim(uint256 _id) public payable {
+    function demandPayment(uint256 _id) public payable {
         Bill storage bill = allBills[_id];
 
-        if (bill.expirationDate <= block.timestamp) {
+        require(!beforeDueDate(_id), "Before due date");
+
+        uint256 amount = getAmountToDemandPayment(_id);
+
+        if (amount <= balance[bill.issuer]) {
+            balance[bill.issuer] -= amount;
+            bill.status = BillStatus.Completed;
+        } else {
             bill.status = BillStatus.Dishonored;
+            dishonoredAddresses.push(bill.issuer);
         }
     }
 }
