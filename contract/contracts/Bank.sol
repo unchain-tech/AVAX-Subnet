@@ -14,7 +14,8 @@ contract Bank {
 
     // 手形の状態を表します。
     enum BillStatus {
-        Active,
+        Issued,
+        Cashed,
         Completed,
         Dishonored
     }
@@ -88,18 +89,20 @@ contract Bank {
             block.timestamp, // block.timestampは正確な値ではありません。
             msg.sender,
             _recipient,
-            BillStatus.Active
+            BillStatus.Issued
         );
 
         allBills.push(bill);
     }
 
     function cashBill(uint256 _id) public payable {
-        Bill memory bill = allBills[_id];
+        Bill storage bill = allBills[_id];
 
-        require(bill.status == BillStatus.Active, "Bill is not active");
+        require(bill.status == BillStatus.Issued, "Status is not Isued");
 
         require(bill.recipient == msg.sender, "Your are not recipient");
+
+        bill.status = BillStatus.Cashed;
 
         uint256 amount = getAmountToCashBill(_id);
 

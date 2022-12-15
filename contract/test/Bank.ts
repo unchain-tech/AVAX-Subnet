@@ -63,6 +63,33 @@ describe("Bank", function () {
         bank.connect(recipient).cashBill(newId)
       ).to.changeEtherBalances([bank, recipient], [-price, price]);
     });
+
+    it("Revert if call twice.", async function () {
+      const { bank, userAccounts } = await loadFixture(deployContract);
+
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
+      const price = 100;
+
+      await bank.connect(issuer).issueBill(price, recipient.address);
+      const newId = 0;
+
+      await bank.connect(recipient).cashBill(newId);
+      await expect(bank.connect(recipient).cashBill(newId)).to.be.reverted;
+    });
+
+    it("Revert if different user call.", async function () {
+      const { bank, userAccounts } = await loadFixture(deployContract);
+
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
+      const price = 100;
+
+      await bank.connect(issuer).issueBill(price, recipient.address);
+      const newId = 0;
+
+      await expect(bank.connect(issuer).cashBill(newId)).to.be.reverted;
+    });
   });
 
   // describe("repay", function () {
