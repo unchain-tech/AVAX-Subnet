@@ -5,7 +5,7 @@ contract Bank {
     // 手形の属性です。
     struct Bill {
         uint256 id;
-        uint256 price;
+        uint256 amount;
         uint256 timestamp;
         address issuer;
         address recipient;
@@ -49,6 +49,10 @@ contract Bank {
         return allBills.length;
     }
 
+    function getNumberOfDishonoredAddresses() public view returns (uint256) {
+        return dishonoredAddresses.length;
+    }
+
     function getBalance() public view returns (uint256) {
         return balance[msg.sender];
     }
@@ -56,7 +60,7 @@ contract Bank {
     function beforeDueDate(uint256 _id) public view returns (bool) {
         Bill memory bill = allBills[_id];
 
-        if (bill.timestamp + term < block.timestamp) {
+        if (block.timestamp <= bill.timestamp + term) {
             return true;
         } else {
             return false;
@@ -67,10 +71,10 @@ contract Bank {
         Bill memory bill = allBills[_id];
 
         if (beforeDueDate(_id)) {
-            return (bill.price * (100 - discountRate)) / 100;
+            return (bill.amount * (100 - discountRate)) / 100;
         }
 
-        return bill.price;
+        return bill.amount;
     }
 
     function getAmountToDemandPayment(uint256 _id)
@@ -79,13 +83,13 @@ contract Bank {
         returns (uint256)
     {
         Bill memory bill = allBills[_id];
-        return (bill.price * (100 + discountRate)) / 100;
+        return (bill.amount * (100 + discountRate)) / 100;
     }
 
-    function issueBill(uint256 _price, address _recipient) public {
+    function issueBill(uint256 _amount, address _recipient) public {
         Bill memory bill = Bill(
             allBills.length,
-            _price,
+            _amount,
             block.timestamp, // block.timestampは正確な値ではありません。
             msg.sender,
             _recipient,
@@ -110,10 +114,10 @@ contract Bank {
     }
 
     function lockToken() public payable {
-        balance[msg.sender] = msg.value;
+        balance[msg.sender] += msg.value;
     }
 
-    function demandPayment(uint256 _id) public payable {
+    function completeBill(uint256 _id) public payable {
         Bill storage bill = allBills[_id];
 
         require(!beforeDueDate(_id), "Before due date");

@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { BigNumber, Overrides } from "ethers";
 import { expect } from "chai";
-import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
 
 describe("Bank", function () {
   async function getLastBlockTimeStamp() {
@@ -31,16 +31,16 @@ describe("Bank", function () {
 
       const issuer = userAccounts[0];
       const recipient = userAccounts[1];
-      const price = 100;
+      const amount = BigNumber.from(100);
 
-      await bank.connect(issuer).issueBill(price, recipient.address);
+      await bank.connect(issuer).issueBill(amount, recipient.address);
       const newId = 0;
 
       const bill = await bank.allBills(newId);
       const activeStatus = 0;
 
       expect(bill.id).to.equal(newId);
-      expect(bill.price).to.equal(price);
+      expect(bill.amount).to.equal(amount);
       expect(bill.timestamp).to.equal(await getLastBlockTimeStamp());
       expect(bill.issuer).to.equal(issuer.address);
       expect(bill.recipient).to.equal(recipient.address);
@@ -54,14 +54,38 @@ describe("Bank", function () {
 
       const issuer = userAccounts[0];
       const recipient = userAccounts[1];
-      const price = 100;
+      const amount = BigNumber.from(100);
 
-      await bank.connect(issuer).issueBill(price, recipient.address);
+      await bank.connect(issuer).issueBill(amount, recipient.address);
+      const newId = 0;
+
+      const term = await bank.term();
+      await time.increase(term);
+
+      await expect(
+        bank.connect(recipient).cashBill(newId)
+      ).to.changeEtherBalances([bank, recipient], [-amount, amount]);
+    });
+
+    it("Discounted amount of token is transferred correctly.", async function () {
+      const { bank, userAccounts } = await loadFixture(deployContract);
+
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
+      const amount = BigNumber.from(100);
+
+      const discountRate = await bank.discountRate();
+      const discountedAmount = amount.sub(amount.mul(discountRate).div(100));
+
+      await bank.connect(issuer).issueBill(amount, recipient.address);
       const newId = 0;
 
       await expect(
         bank.connect(recipient).cashBill(newId)
-      ).to.changeEtherBalances([bank, recipient], [-price, price]);
+      ).to.changeEtherBalances(
+        [bank, recipient],
+        [-discountedAmount, discountedAmount]
+      );
     });
 
     it("Revert if call twice.", async function () {
@@ -69,9 +93,9 @@ describe("Bank", function () {
 
       const issuer = userAccounts[0];
       const recipient = userAccounts[1];
-      const price = 100;
+      const amount = BigNumber.from(100);
 
-      await bank.connect(issuer).issueBill(price, recipient.address);
+      await bank.connect(issuer).issueBill(amount, recipient.address);
       const newId = 0;
 
       await bank.connect(recipient).cashBill(newId);
@@ -83,60 +107,90 @@ describe("Bank", function () {
 
       const issuer = userAccounts[0];
       const recipient = userAccounts[1];
-      const price = 100;
+      const amount = BigNumber.from(100);
 
-      await bank.connect(issuer).issueBill(price, recipient.address);
+      await bank.connect(issuer).issueBill(amount, recipient.address);
       const newId = 0;
 
       await expect(bank.connect(issuer).cashBill(newId)).to.be.reverted;
     });
   });
 
-  // describe("repay", function () {
-  //   it("Bills is properly repaid", async function () {
-  //     const { bank, userAccounts } = await loadFixture(deployContract);
+  describe("Token is transferred correctly.", function () {
+    it("Token", async function () {
+      const { bank, userAccounts } = await loadFixture(deployContract);
 
-  //     const oneWeekInSecond = 60 * 60 * 24 * 7;
+      const account = userAccounts[0];
+      const amount = BigNumber.from(100);
 
-  //     const borrower = userAccounts[0];
-  //     const lender = userAccounts[1];
-  //     const price = 100;
-  //     const expirationDate = BigNumber.from(Date.now())
-  //       .div(1000) // in second
-  //       .add(oneWeekInSecond); // one week later
+      await expect(
+        bank.connect(account).lockToken({
+          value: amount,
+        } as Overrides)
+      ).to.changeEtherBalances([account, bank], [-amount, amount]);
 
-  //     await bank.connect(borrower).request(price, expirationDate);
+      expect(await bank.connect(account).getBalance()).to.equal(amount);
+    });
+  });
 
-  //     await bank.connect(lender).lend(0, { value: price } as Overrides);
+  describe("completeBill", function () {
+    it("Revert if call before due date", async function () {
+      const { bank, userAccounts } = await loadFixture(deployContract);
 
-  //     await expect(
-  //       bank.connect(borrower).repay(0, { value: price } as Overrides)
-  //     ).to.changeEtherBalances([borrower, lender], [-price, price]);
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
+      const amount = BigNumber.from(100);
 
-  //     const bill = await bank.getBill(0);
+      await bank.connect(issuer).issueBill(amount, recipient.address);
+      const newId = 0;
 
-  //     expect(bill.status).to.equal(2);
-  //   });
-  // });
+      await expect(bank.completeBill(newId)).to.be.reverted;
+    });
 
-  // describe("claim", function () {
-  //   it("Bills is properly claimed", async function () {
-  //     const { bank, userAccounts } = await loadFixture(deployContract);
+    it("Bill is properly completed", async function () {
+      const { bank, userAccounts } = await loadFixture(deployContract);
 
-  //     const oneWeekInSecond = 60 * 60 * 24 * 7;
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
+      const amount = BigNumber.from(100);
 
-  //     const borrower = userAccounts[0];
-  //     const lender = userAccounts[1];
-  //     const price = 100;
-  //     const expirationDate = BigNumber.from(Date.now())
-  //       .div(1000) // in second
-  //       .add(oneWeekInSecond); // one week later
+      await bank.connect(issuer).issueBill(amount, recipient.address);
+      const newId = 0;
 
-  //     await bank.connect(borrower).request(price, expirationDate);
+      const interestRate = await bank.interestRate();
+      const amountWithFee = amount.add(amount.mul(interestRate).div(100));
+      await bank.connect(issuer).lockToken({
+        value: amountWithFee,
+      } as Overrides);
 
-  //     const bill = await bank.getBill(0);
+      const term = await bank.term();
+      await time.increase(term);
 
-  //     expect(bill.status).to.equal(2);
-  //   });
-  // });
+      await bank.completeBill(newId);
+      const statusCompleted = 2;
+
+      expect(await bank.connect(issuer).getBalance()).to.equal(0);
+      expect((await bank.allBills(newId)).status).to.equal(statusCompleted);
+    });
+
+    it("Bill is properly dishonored.", async function () {
+      const { bank, userAccounts } = await loadFixture(deployContract);
+
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
+      const amount = BigNumber.from(100);
+
+      await bank.connect(issuer).issueBill(amount, recipient.address);
+      const newId = 0;
+
+      const term = await bank.term();
+      await time.increase(term);
+
+      await bank.completeBill(newId);
+      const statusDishonored = 3;
+
+      expect((await bank.allBills(newId)).status).to.equal(statusDishonored);
+      expect(await bank.dishonoredAddresses(0)).to.equal(issuer.address);
+    });
+  });
 });
