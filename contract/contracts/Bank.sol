@@ -37,18 +37,16 @@ contract Bank {
     // 手形手数料
     uint256 public constant interestRate = 10;
 
+    constructor() payable {}
+
     function sendAvax(address payable _to, uint256 _amount) private {
         (bool success, ) = (_to).call{value: _amount}("");
         require(success, "Failed to send AVAX");
     }
 
-    // function getNumberOfBills() public view returns (uint256) {
-    //     return allBills.length;
-    // }
-
-    // function getBill(uint256 _id) public view returns (Bill memory) {
-    //     return allBills[_id];
-    // }
+    function getNumberOfBills() public view returns (uint256) {
+        return allBills.length;
+    }
 
     function getBalance() public view returns (uint256) {
         return balance[msg.sender];

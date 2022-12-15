@@ -4,11 +4,19 @@ import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 describe("Bank", function () {
+  async function getLastBlockTimeStamp() {
+    const blockNumberBefore = await ethers.provider.getBlockNumber();
+    const blockBefore = await ethers.provider.getBlock(blockNumberBefore);
+    return BigNumber.from(blockBefore.timestamp);
+  }
+
   async function deployContract() {
     const accounts = await ethers.getSigners();
 
     const Bank = await ethers.getContractFactory("Bank");
-    const bank = await Bank.deploy();
+    const bank = await Bank.deploy({
+      value: 10000,
+    } as Overrides);
 
     return {
       deployAccount: accounts[0],
@@ -17,104 +25,91 @@ describe("Bank", function () {
     };
   }
 
-  describe("request", function () {
-    it("Correct bill requested", async function () {
+  describe("issueBill", function () {
+    it("Correct bill issued.", async function () {
       const { bank, userAccounts } = await loadFixture(deployContract);
 
-      const oneWeekInSecond = 60 * 60 * 24 * 7;
-
-      const account = userAccounts[0];
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
       const price = 100;
-      const expirationDate = BigNumber.from(Date.now())
-        .div(1000) // in second
-        .add(oneWeekInSecond); // one week later
 
-      await bank.connect(account).request(price, expirationDate);
+      await bank.connect(issuer).issueBill(price, recipient.address);
+      const newId = 0;
 
-      const bill = await bank.getBill(0);
+      const bill = await bank.allBills(newId);
+      const activeStatus = 0;
 
-      expect(bill.id).to.equal(0);
+      expect(bill.id).to.equal(newId);
       expect(bill.price).to.equal(price);
-      expect(bill.expirationDate).to.equal(expirationDate);
-      expect(bill.status).to.equal(0);
-      expect(bill.borrower).to.equal(account.address);
-      expect(bill.lender).to.equal(
-        "0x0000000000000000000000000000000000000000"
-      );
+      expect(bill.timestamp).to.equal(await getLastBlockTimeStamp());
+      expect(bill.issuer).to.equal(issuer.address);
+      expect(bill.recipient).to.equal(recipient.address);
+      expect(bill.status).to.equal(activeStatus);
     });
   });
 
-  describe("lend", function () {
-    it("Bill is properly lend.", async function () {
+  describe("cashBill", function () {
+    it("Token is transferred correctly.", async function () {
       const { bank, userAccounts } = await loadFixture(deployContract);
 
-      const oneWeekInSecond = 60 * 60 * 24 * 7;
-
-      const borrower = userAccounts[0];
-      const lender = userAccounts[1];
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
       const price = 100;
-      const expirationDate = BigNumber.from(Date.now())
-        .div(1000) // in second
-        .add(oneWeekInSecond); // one week later
 
-      await bank.connect(borrower).request(price, expirationDate);
+      await bank.connect(issuer).issueBill(price, recipient.address);
+      const newId = 0;
 
       await expect(
-        bank.connect(lender).lend(0, { value: price } as Overrides)
-      ).to.changeEtherBalances([borrower, lender], [price, -price]);
-
-      const bill = await bank.getBill(0);
-
-      expect(bill.status).to.equal(1);
-      expect(bill.lender).to.equal(lender.address);
+        bank.connect(recipient).cashBill(newId)
+      ).to.changeEtherBalances([bank, recipient], [-price, price]);
     });
   });
 
-  describe("repay", function () {
-    it("Bills is properly repaid", async function () {
-      const { bank, userAccounts } = await loadFixture(deployContract);
+  // describe("repay", function () {
+  //   it("Bills is properly repaid", async function () {
+  //     const { bank, userAccounts } = await loadFixture(deployContract);
 
-      const oneWeekInSecond = 60 * 60 * 24 * 7;
+  //     const oneWeekInSecond = 60 * 60 * 24 * 7;
 
-      const borrower = userAccounts[0];
-      const lender = userAccounts[1];
-      const price = 100;
-      const expirationDate = BigNumber.from(Date.now())
-        .div(1000) // in second
-        .add(oneWeekInSecond); // one week later
+  //     const borrower = userAccounts[0];
+  //     const lender = userAccounts[1];
+  //     const price = 100;
+  //     const expirationDate = BigNumber.from(Date.now())
+  //       .div(1000) // in second
+  //       .add(oneWeekInSecond); // one week later
 
-      await bank.connect(borrower).request(price, expirationDate);
+  //     await bank.connect(borrower).request(price, expirationDate);
 
-      await bank.connect(lender).lend(0, { value: price } as Overrides);
+  //     await bank.connect(lender).lend(0, { value: price } as Overrides);
 
-      await expect(
-        bank.connect(borrower).repay(0, { value: price } as Overrides)
-      ).to.changeEtherBalances([borrower, lender], [-price, price]);
+  //     await expect(
+  //       bank.connect(borrower).repay(0, { value: price } as Overrides)
+  //     ).to.changeEtherBalances([borrower, lender], [-price, price]);
 
-      const bill = await bank.getBill(0);
+  //     const bill = await bank.getBill(0);
 
-      expect(bill.status).to.equal(2);
-    });
-  });
+  //     expect(bill.status).to.equal(2);
+  //   });
+  // });
 
-  describe("claim", function () {
-    it("Bills is properly claimed", async function () {
-      const { bank, userAccounts } = await loadFixture(deployContract);
+  // describe("claim", function () {
+  //   it("Bills is properly claimed", async function () {
+  //     const { bank, userAccounts } = await loadFixture(deployContract);
 
-      const oneWeekInSecond = 60 * 60 * 24 * 7;
+  //     const oneWeekInSecond = 60 * 60 * 24 * 7;
 
-      const borrower = userAccounts[0];
-      const lender = userAccounts[1];
-      const price = 100;
-      const expirationDate = BigNumber.from(Date.now())
-        .div(1000) // in second
-        .add(oneWeekInSecond); // one week later
+  //     const borrower = userAccounts[0];
+  //     const lender = userAccounts[1];
+  //     const price = 100;
+  //     const expirationDate = BigNumber.from(Date.now())
+  //       .div(1000) // in second
+  //       .add(oneWeekInSecond); // one week later
 
-      await bank.connect(borrower).request(price, expirationDate);
+  //     await bank.connect(borrower).request(price, expirationDate);
 
-      const bill = await bank.getBill(0);
+  //     const bill = await bank.getBill(0);
 
-      expect(bill.status).to.equal(2);
-    });
-  });
+  //     expect(bill.status).to.equal(2);
+  //   });
+  // });
 });
