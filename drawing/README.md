@@ -4,6 +4,4 @@
 
 ### front
 
-figmaの設計書
-
-[以下参考](https://www.youtube.com/watch?v=JuaXJ4DgItY)
+[figma minimum 設計](https://www.figma.com/file/9CJAXAb9b53LKe3N5PsHpm/AVAX-Subnet?node-id=0%3A1&t=WG3CD6isN7LnjD3S-1)
