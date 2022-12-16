@@ -77,11 +77,7 @@ contract Bank {
         return bill.amount;
     }
 
-    function getAmountToDemandPayment(uint256 _id)
-        public
-        view
-        returns (uint256)
-    {
+    function getAmountToPayBill(uint256 _id) public view returns (uint256) {
         Bill memory bill = allBills[_id];
         return (bill.amount * (100 + discountRate)) / 100;
     }
@@ -122,7 +118,7 @@ contract Bank {
 
         require(!beforeDueDate(_id), "Before due date");
 
-        uint256 amount = getAmountToDemandPayment(_id);
+        uint256 amount = getAmountToPayBill(_id);
 
         if (amount <= balance[bill.issuer]) {
             balance[bill.issuer] -= amount;
