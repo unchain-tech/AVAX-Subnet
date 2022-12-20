@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ReactNode } from "react";
 import ConnectWalletButton from "../Button/ConnectWalletButton";
 import NavButton from "../Button/NavButton";
