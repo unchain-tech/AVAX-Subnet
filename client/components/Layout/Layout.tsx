@@ -9,7 +9,7 @@ type Props = {
 export default function Layout({ children }: Props) {
   return (
     <div>
-      <header className="bg-gradient-to-r from-sky-500 to-indigo-500 p-4">
+      <header className="p-4">
         <nav className="flex justify-between mx-auto container items-center">
           <div className="flex">
             <div className="text-4xl"> Title </div>
