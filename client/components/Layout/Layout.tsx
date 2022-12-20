@@ -17,6 +17,7 @@ export default function Layout({ children }: Props) {
               <NavButton to="/" name="Home" />
               <NavButton to="/IssueBill" name="Issue Bill" />
               <NavButton to="/ViewBills" name="View Bills" />
+              <NavButton to="/Admin" name="Admin" />
             </div>
           </div>
           <ConnectWalletButton />
