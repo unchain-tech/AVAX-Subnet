@@ -2,7 +2,7 @@ type Props = {
   message: string;
 };
 
-export default function ViewCard({ message }: Props) {
+export default function ViewBillCard({ message }: Props) {
   return (
     <div className="bg-slate-300 p-5 m-10">
       <div>

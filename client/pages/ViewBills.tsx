@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ViewCard from "../components/Card/ViewCard";
+import ViewBillCard from "../components/Card/ViewBillCard";
 import Layout from "../components/Layout/Layout";
 
 export default function ViewBills() {
@@ -21,7 +21,7 @@ export default function ViewBills() {
             {items.map((message, index) => {
               return (
                 <div key={index} className="flex justify-center">
-                  <ViewCard message={message} />
+                  <ViewBillCard message={message} />
                 </div>
               );
             })}
@@ -30,7 +30,7 @@ export default function ViewBills() {
             {items.map((message, index) => {
               return (
                 <div key={index} className="flex justify-center">
-                  <ViewCard message={message} />
+                  <ViewBillCard message={message} />
                 </div>
               );
             })}

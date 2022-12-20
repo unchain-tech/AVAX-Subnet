@@ -1,11 +1,11 @@
-import IssueCard from "../components/Card/IssueCard";
+import IssueBillForm from "../components/Form/IssueBillForm";
 import Layout from "../components/Layout/Layout";
 
 export default function IssueBill() {
   return (
     <body>
       <Layout>
-        <IssueCard message={"IssueBill"} />
+        <IssueBillForm message={"IssueBill"} />
       </Layout>
     </body>
   );

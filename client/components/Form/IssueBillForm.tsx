@@ -2,7 +2,7 @@ type Props = {
   message: string;
 };
 
-export default function IssueCard({ message }: Props) {
+export default function IssueBillForm({ message }: Props) {
   return (
     <div className="bg-slate-300 p-5 m-10">
       <div>

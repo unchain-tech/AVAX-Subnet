@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ViewAccountCard from "../components/Card/ViewAccountCard";
+import AdminForm from "../components/Form/AdminForm";
 import Layout from "../components/Layout/Layout";
 
 export default function Admin() {
@@ -16,6 +17,9 @@ export default function Admin() {
   return (
     <body>
       <Layout>
+        <div>
+          <AdminForm message={"out account"} />
+        </div>
         <div>
           {items.map((message, index) => {
             return (
