@@ -1,42 +1,32 @@
-import styles from "./DefaultLayout.module.css";
 import Link from "next/link";
-import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { useContext, ReactNode } from "react";
+import { ReactNode } from "react";
+import ConnectWalletButton from "../Button/ConnectWalletButton";
+import NavButton from "../Button/NavButton";
 
 type Props = {
   children: ReactNode;
-  home?: boolean;
 };
 
-//TODO: <Head>などはページ単位での設定が推奨。indexで設定して他のページではどうなるのか確認。<Head>や<footer>の使い方はinit時のものを参照。
+// connectWalletはボタンを別で実装する。
+// 振る舞いと
 
-export default function DefaultLayout({ children, home }: Props) {
-  const [currentAccount, connectWallet] = useContext(CurrentAccountContext);
-
+export default function DefaultLayout({ children }: Props) {
   return (
     <div>
-      <div className={styles.navBar}>
-        <div className={styles.rightHeader}>
-          <div className={styles.appName}> Asset Tokenization </div>
-        </div>
-        {currentAccount == undefined ? (
-          <div className={styles.connectBtn} onClick={connectWallet}>
-            {" "}
-            Connect to wallet{" "}
+      <header className="bg-gradient-to-r from-sky-500 to-indigo-500 p-4">
+        <nav className="flex justify-between mx-auto container items-center">
+          <div className="flex">
+            <div className="text-4xl"> Title </div>
+            <div className="space-x-12 font-bold mx-8 pt-4">
+              <NavButton to="/" name="Home" />
+              <NavButton to="/" name="Issue Bill" />
+              <NavButton to="/" name="View Bills" />
+            </div>
           </div>
-        ) : (
-          <div className={styles.connected}>
-            {" "}
-            {"Connected to " + currentAccount}{" "}
-          </div>
-        )}
-      </div>
-      <div>{children}</div>
-      {!home && (
-        <Link href="/">
-          <div className={styles.backToHome}>Back to home</div>
-        </Link>
-      )}
+          <ConnectWalletButton />
+        </nav>
+      </header>
+      <main>{children}</main>
     </div>
   );
 }
