@@ -1,25 +1,24 @@
+import SubmitButton from "../Button/SubmitButton";
+import InputField from "../Field/InputField";
+
 type Props = {
   message: string;
 };
 
+const onClickIssue = async () => {
+  alert("onClickIssue");
+};
+
 export default function IssueBillForm({ message }: Props) {
   return (
-    <div className="bg-slate-300 p-5 m-10">
-      <div>
-        <div className="bg-slate-400 mb-3">
-          <div>amount:</div>
-          <div>{message}</div>
-        </div>
-        <div className="bg-slate-400 mb-3">
-          <div>issuer:</div>
-          <div>{message}</div>
-        </div>
-        <div className="bg-slate-400 mb-3">
-          <div>recipient:</div>
-          <div>{message}</div>
-        </div>
-      </div>
-      <button className="bg-blue-400 float-right">button</button>
+    <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm h-fit my-auto">
+      <form>
+        <InputField
+          label="Recipient"
+          placeholder="Enter the address of recipient"
+        />
+        <SubmitButton title="issue" onClick={onClickIssue} />
+      </form>
     </div>
   );
 }
