@@ -17,11 +17,11 @@ export default function Admin() {
   return (
     <body>
       <Layout>
-        <div className="flex bg-gradient-to-r from-sky-500 to-indigo-500 h-screen">
-          <div className="w-10/12 my-10">
+        <div className="flex justify-center bg-gradient-to-r from-sky-500 to-indigo-500 h-screen">
+          <div className="my-20">
             <AdminForm />
           </div>
-          <div className="my-10">
+          <div className="my-20 mx-20">
             <div>dishonored</div>
             {dishonoredAddresses.map((address, index) => {
               return (

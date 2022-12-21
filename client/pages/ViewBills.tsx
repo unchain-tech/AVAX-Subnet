@@ -51,9 +51,10 @@ export default function ViewBills() {
           <div>
             {billsOfRecipient.map((bill, index) => {
               return (
-                <div key={index} className="flex justify-center">
+                <div key={index}>
                   <ViewBillCard
-                    title="cash"
+                    title="Bill to cash"
+                    button="cash"
                     onClick={() => {
                       onClickCash(index, bill);
                     }}
@@ -66,9 +67,10 @@ export default function ViewBills() {
           <div>
             {billsOfIssuer.map((bill, index) => {
               return (
-                <div key={index} className="flex justify-center">
+                <div key={index}>
                   <ViewBillCard
-                    title="pay"
+                    title="Bill to pay"
+                    button="pay"
                     onClick={() => {
                       onClickPay(index, bill);
                     }}
