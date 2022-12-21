@@ -1,9 +1,10 @@
 type Props = {
   label: string;
   placeholder: string;
+  onChange: (value: string) => void;
 };
 
-export default function InputField({ label, placeholder }: Props) {
+export default function InputField({ label, placeholder, onChange }: Props) {
   return (
     <div className="form-group mb-6">
       <label
@@ -14,6 +15,9 @@ export default function InputField({ label, placeholder }: Props) {
       </label>
       <input
         type="text"
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
         className="form-control
         block
         w-full
