@@ -23,7 +23,7 @@ export default function Layout({ children }: Props) {
           <ConnectWalletButton />
         </nav>
       </header>
-      <main>{children}</main>
+      <div>{children}</div>
     </div>
   );
 }
