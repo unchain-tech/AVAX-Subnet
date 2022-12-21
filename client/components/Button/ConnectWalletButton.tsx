@@ -8,13 +8,20 @@ export default function ConnectWalletButton() {
     <div>
       {currentAccount == undefined ? (
         <div
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          className="px-2 py-2 rounded-md w-max self-center
+        bg-slate-400 text-white hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg duration-300"
           onClick={connectWallet}
         >
           Connect to wallet
         </div>
       ) : (
-        <div className=""> {"Connected to " + currentAccount} </div>
+        <div
+          className="rounded px-2 py-1
+        bg-slate-400 text-white"
+        >
+          {" "}
+          {"Connected to " + currentAccount}{" "}
+        </div>
       )}
     </div>
   );

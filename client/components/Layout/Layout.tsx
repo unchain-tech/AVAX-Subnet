@@ -9,11 +9,11 @@ type Props = {
 export default function Layout({ children }: Props) {
   return (
     <div>
-      <header className="p-4">
-        <nav className="flex justify-between mx-auto container items-center">
-          <div className="flex">
-            <div className="text-4xl"> Title </div>
-            <div className="space-x-12 font-bold mx-8 pt-4">
+      <header className="p-4 ">
+        <nav className="flex justify-between mx-auto container items-center ">
+          <div className="xl:flex">
+            <div className="text-4xl"> AVAX Subnet </div>
+            <div className="space-x-12 font-bold mx-8 pt-2">
               <NavButton to="/" name="Home" />
               <NavButton to="/IssueBill" name="Issue Bill" />
               <NavButton to="/ViewBills" name="View Bills" />

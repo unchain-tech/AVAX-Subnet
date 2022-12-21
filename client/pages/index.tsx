@@ -5,10 +5,8 @@ const Home: NextPage = () => {
   return (
     <body>
       <Layout>
-        <div className="bg-home min-h-screen bg-cover bg-center object-cover">
-          <h1 className="text-5xl font-bold">
-            UNCHAIN Finance with blockchain
-          </h1>
+        <div className="bg-home h-screen bg-cover bg-center flex justify-around">
+          <h1 className="text-6xl font-bold my-auto">AVAX Subnet X Finance</h1>
         </div>
       </Layout>
     </body>

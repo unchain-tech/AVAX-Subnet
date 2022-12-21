@@ -1,13 +1,11 @@
 type Props = {
-  message: string;
+  address: string;
 };
 
-export default function ViewAccountCard({ message }: Props) {
+export default function ViewAccountCard({ address }: Props) {
   return (
-    <div className="bg-slate-300 p-5 m-10">
-      <div className="bg-slate-400 mb-3">
-        <div>account: {message}</div>
-      </div>
+    <div className="block px-1 rounded-lg shadow-lg bg-white max-w-sm">
+      <p className="text-gray-700 text-base mb-4">{address}</p>
     </div>
   );
 }
