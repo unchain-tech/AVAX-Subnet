@@ -3,18 +3,17 @@ import ViewBillCard, { BillType } from "../components/Card/ViewBillCard";
 import Layout from "../components/Layout/Layout";
 import CurrentAccountContext from "../context/CurrentAccountProvider";
 import { useContract } from "../hooks/useContract";
+import { sameAddresses } from "../utils/compare";
 import { weiToAvax } from "../utils/formatter";
 
+//TODO 整理
+//TODO billの状態で色やボタンdisableかえる
 export default function ViewBills() {
   const [currentAccount] = useContext(CurrentAccountContext);
   const { bank } = useContract({ currentAccount });
 
   const [billsOfRecipient, setBillsOfRecipient] = useState<BillType[]>([]);
   const [billsOfIssuer, setBillsOfIssuer] = useState<BillType[]>([]);
-
-  const sameAddresses = (address1: string, address2: string) => {
-    return address1.toLocaleLowerCase() === address2.toLocaleLowerCase();
-  };
 
   const getBills = useCallback(async () => {
     if (!currentAccount) {
@@ -47,14 +46,38 @@ export default function ViewBills() {
     }
   }, [currentAccount, bank]);
 
-  const onClickCash = async (index: number, bill: BillType) => {
-    alert(
-      "on click Cash:" + JSON.stringify(index) + ":" + JSON.stringify(bill)
-    );
+  const onClickCash = async (id: number) => {
+    if (!currentAccount) {
+      alert("connect wallet");
+      return;
+    }
+    if (!bank) return;
+    try {
+      const txn = await bank.cashBill(id);
+      await txn.wait();
+
+      alert("Success");
+    } catch (error) {
+      alert(error);
+    }
   };
 
-  const onClickPay = async (index: number, bill: BillType) => {
-    alert("on click Pay:" + JSON.stringify(index) + ":" + JSON.stringify(bill));
+  const onClickPay = async (id: number) => {
+    if (!currentAccount) {
+      alert("connect wallet");
+      return;
+    }
+    if (!bank) return;
+    try {
+      const amount = await bank.getAmountToPayBill(id);
+
+      const txn = await bank.lockToken({ value: amount });
+      await txn.wait();
+
+      alert("Success");
+    } catch (error) {
+      alert(error);
+    }
   };
 
   useEffect(() => {
@@ -73,7 +96,7 @@ export default function ViewBills() {
                     title="Bill to cash"
                     button="cash"
                     onClick={() => {
-                      onClickCash(index, bill);
+                      onClickCash(index);
                     }}
                     bill={bill}
                   />
@@ -89,7 +112,7 @@ export default function ViewBills() {
                     title="Bill to pay"
                     button="pay"
                     onClick={() => {
-                      onClickPay(index, bill);
+                      onClickPay(index);
                     }}
                     bill={bill}
                   />

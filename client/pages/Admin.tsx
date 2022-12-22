@@ -3,6 +3,7 @@ import ViewAccountCard from "../components/Card/ViewAccountCard";
 import AdminForm from "../components/Form/AdminForm";
 import Layout from "../components/Layout/Layout";
 
+//TODO completeBill
 export default function Admin() {
   const [dishonoredAddresses, setDishonoredAddresses] = useState<string[]>([]);
 
