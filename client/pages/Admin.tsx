@@ -3,7 +3,6 @@ import DishonoredCards from "../components/Card/DishonoredCards";
 import AdminForm from "../components/Form/AdminForm";
 import Layout from "../components/Layout/Layout";
 
-//TODO adminボタンの非表示
 export default function Admin() {
   return (
     <body>
