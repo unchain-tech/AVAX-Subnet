@@ -6,8 +6,6 @@ import { useContract } from "../hooks/useContract";
 import { sameAddresses } from "../utils/compare";
 import { weiToAvax } from "../utils/formatter";
 
-//TODO 整理
-//TODO billの状態で色やボタンdisableかえる
 export default function ViewBills() {
   const [currentAccount] = useContext(CurrentAccountContext);
   const { bank } = useContract({ currentAccount });
