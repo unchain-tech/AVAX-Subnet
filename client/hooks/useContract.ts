@@ -18,6 +18,19 @@ export type BillType = {
   active: boolean;
 };
 
+export enum BillStatus {
+  Issued,
+  Cashed,
+  Completed,
+  Dishonored,
+}
+
+export enum TxAllowListRole {
+  None,
+  Enabled,
+  Admin,
+}
+
 type PropsUseContract = {
   currentAccount: string | undefined;
 };

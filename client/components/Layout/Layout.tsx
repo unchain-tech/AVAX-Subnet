@@ -1,4 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import CurrentAccountContext from "../../context/CurrentAccountProvider";
+import { TxAllowListRole, useContract } from "../../hooks/useContract";
 import ConnectWalletButton from "../Button/ConnectWalletButton";
 import NavButton from "../Button/NavButton";
 
@@ -7,6 +9,27 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
+  const [currentAccount] = useContext(CurrentAccountContext);
+  const { txAllowList } = useContract({ currentAccount });
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const getAdminAddress = useCallback(async () => {
+    if (!currentAccount) return;
+    if (!txAllowList) return;
+    try {
+      const role = await txAllowList.readAllowList(currentAccount);
+      if (role.toNumber() === TxAllowListRole.Admin) {
+        setIsAdmin(true);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }, [currentAccount, txAllowList]);
+
+  useEffect(() => {
+    getAdminAddress();
+  }, [txAllowList, getAdminAddress]);
+
   return (
     <div>
       <header className="p-4 ">
@@ -17,7 +40,7 @@ export default function Layout({ children }: Props) {
               <NavButton to="/" name="Home" />
               <NavButton to="/IssueBill" name="Issue Bill" />
               <NavButton to="/ViewBills" name="View Bills" />
-              <NavButton to="/Admin" name="Admin" />
+              {isAdmin ? <NavButton to="/Admin" name="Admin" /> : <div></div>}
             </div>
           </div>
           <ConnectWalletButton />
