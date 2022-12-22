@@ -1,12 +1,5 @@
+import { BillType } from "../../hooks/useContract";
 import SubmitButton from "../Button/SubmitButton";
-
-export type BillType = {
-  amount: string;
-  dueDate: string;
-  issuer: string;
-  recipient: string;
-  active: boolean;
-};
 
 type Props = {
   title: string;

@@ -5,9 +5,18 @@ import TxAllowListAbi from "../artifacts/IAllowList.json";
 import { Bank as BankType } from "../types";
 import { IAllowList as TxAllowListType } from "../types";
 import { getEthereum } from "../utils/ethereum";
+import { weiToAvax } from "../utils/formatter";
 
 export const BankAddress = "0x8C6dFbFC0b3e83cBBB82E4b5A187Bc9C0EcE0630";
 export const TxAllowListAddress = "0x0200000000000000000000000000000000000002";
+
+export type BillType = {
+  amount: string;
+  dueDate: string;
+  issuer: string;
+  recipient: string;
+  active: boolean;
+};
 
 type PropsUseContract = {
   currentAccount: string | undefined;
@@ -16,6 +25,7 @@ type PropsUseContract = {
 type ReturnUseContract = {
   bank: BankType | undefined;
   txAllowList: TxAllowListType | undefined;
+  bills: BillType[];
 };
 
 export const useContract = ({
@@ -23,6 +33,8 @@ export const useContract = ({
 }: PropsUseContract): ReturnUseContract => {
   const [bank, setBank] = useState<BankType>();
   const [txAllowList, setTxAllowList] = useState<TxAllowListType>();
+  const [bills, setBills] = useState<BillType[]>([]);
+
   const ethereum = getEthereum();
 
   const getContract = useCallback(
@@ -54,6 +66,29 @@ export const useContract = ({
     [ethereum, currentAccount]
   );
 
+  const getBills = useCallback(async () => {
+    if (!currentAccount) return;
+    if (!bank) return;
+    try {
+      const numOfBills = await bank.getNumberOfBills();
+
+      for (let index = 0; index < numOfBills.toNumber(); index++) {
+        const billOrigin = await bank.allBills(index);
+        const bill: BillType = {
+          amount: weiToAvax(billOrigin.amount),
+          dueDate: "0",
+          issuer: billOrigin.issuer,
+          recipient: billOrigin.recipient,
+          active: true,
+        };
+
+        setBills((prevState) => [...prevState, bill]);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }, [currentAccount, bank]);
+
   useEffect(() => {
     getContract(BankAddress, BankAbi.abi, (Contract: ethers.Contract) => {
       setBank(Contract as BankType);
@@ -67,8 +102,13 @@ export const useContract = ({
     );
   }, [ethereum, currentAccount, getContract]);
 
+  useEffect(() => {
+    getBills();
+  }, [bank, getBills]);
+
   return {
     bank: bank,
     txAllowList: txAllowList,
+    bills: bills,
   };
 };
