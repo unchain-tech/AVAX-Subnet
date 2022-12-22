@@ -5,19 +5,20 @@ import TxAllowListAbi from "../artifacts/IAllowList.json";
 import { Bank as BankType } from "../types";
 import { IAllowList as TxAllowListType } from "../types";
 import { getEthereum } from "../utils/ethereum";
-import { weiToAvax } from "../utils/formatter";
+import { blockTimeStampToDate, weiToAvax } from "../utils/formatter";
 
 export const BankAddress = "0x8C6dFbFC0b3e83cBBB82E4b5A187Bc9C0EcE0630";
 export const TxAllowListAddress = "0x0200000000000000000000000000000000000002";
 
 export type BillType = {
   amount: string;
-  dueDate: string;
+  dueDate: Date;
   issuer: string;
   recipient: string;
   active: boolean;
 };
 
+//TODO: これ使って色分け
 export enum BillStatus {
   Issued,
   Cashed,
@@ -84,12 +85,13 @@ export const useContract = ({
     if (!bank) return;
     try {
       const numOfBills = await bank.getNumberOfBills();
+      const term = await bank.term();
 
       for (let index = 0; index < numOfBills.toNumber(); index++) {
         const billOrigin = await bank.allBills(index);
         const bill: BillType = {
           amount: weiToAvax(billOrigin.amount),
-          dueDate: "0",
+          dueDate: blockTimeStampToDate(billOrigin.timestamp.add(term)),
           issuer: billOrigin.issuer,
           recipient: billOrigin.recipient,
           active: true,

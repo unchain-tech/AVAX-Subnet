@@ -15,7 +15,9 @@ export default function ViewBillCard({ title, button, onClick, bill }: Props) {
         {title}
       </h5>
       <p className="text-gray-700 text-base mb-4">amount: {bill.amount}</p>
-      <p className="text-gray-700 text-base mb-4">dueDate: {bill.dueDate}</p>
+      <p className="text-gray-700 text-base mb-4">
+        dueDate: {bill.dueDate.toString()}
+      </p>
       <p className="text-gray-700 text-base mb-4">issuer: {bill.issuer}</p>
       <p className="text-gray-700 text-base mb-4">
         recipient: {bill.recipient}

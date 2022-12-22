@@ -7,7 +7,7 @@ import NavButton from "../Button/NavButton";
 type Props = {
   children: ReactNode;
 };
-//TODO: 消費期限計算できてない
+
 export default function Layout({ children }: Props) {
   const [currentAccount] = useContext(CurrentAccountContext);
   const { txAllowList } = useContract({ currentAccount });
