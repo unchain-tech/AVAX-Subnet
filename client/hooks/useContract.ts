@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
-import Contract from "../artifacts/Counter.json";
-import TxAllowList from "../artifacts/IAllowList.json";
-import { Counter as ContractType } from "../types";
+import BankAbi from "../artifacts/Bank.json";
+import TxAllowListAbi from "../artifacts/IAllowList.json";
+import { Bank as BankType } from "../types";
 import { IAllowList as TxAllowListType } from "../types";
 import { getEthereum } from "../utils/ethereum";
 
-export const ContractAddress = "0x6593B6F30BEA2C6e9d9d92Ed4B6fAf2e21D028f5";
+export const BankAddress = "0x8C6dFbFC0b3e83cBBB82E4b5A187Bc9C0EcE0630";
 export const TxAllowListAddress = "0x0200000000000000000000000000000000000002";
 
 type PropsUseContract = {
@@ -14,14 +14,14 @@ type PropsUseContract = {
 };
 
 type ReturnUseContract = {
-  contract: ContractType | undefined;
+  bank: BankType | undefined;
   txAllowList: TxAllowListType | undefined;
 };
 
 export const useContract = ({
   currentAccount,
 }: PropsUseContract): ReturnUseContract => {
-  const [contract, setContract] = useState<ContractType>();
+  const [bank, setBank] = useState<BankType>();
   const [txAllowList, setTxAllowList] = useState<TxAllowListType>();
   const ethereum = getEthereum();
 
@@ -55,12 +55,12 @@ export const useContract = ({
   );
 
   useEffect(() => {
-    getContract(ContractAddress, Contract.abi, (Contract: ethers.Contract) => {
-      setContract(Contract as ContractType);
+    getContract(BankAddress, BankAbi.abi, (Contract: ethers.Contract) => {
+      setBank(Contract as BankType);
     });
     getContract(
       TxAllowListAddress,
-      TxAllowList.abi,
+      TxAllowListAbi.abi,
       (Contract: ethers.Contract) => {
         setTxAllowList(Contract as TxAllowListType);
       }
@@ -68,7 +68,7 @@ export const useContract = ({
   }, [ethereum, currentAccount, getContract]);
 
   return {
-    contract,
-    txAllowList,
+    bank: bank,
+    txAllowList: txAllowList,
   };
 };

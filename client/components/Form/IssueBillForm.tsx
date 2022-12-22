@@ -1,17 +1,33 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import CurrentAccountContext from "../../context/CurrentAccountProvider";
+import { useContract } from "../../hooks/useContract";
+import { avaxToWei } from "../../utils/formatter";
 import SubmitButton from "../Button/SubmitButton";
 import InputField from "../Field/InputField";
 
-type Props = {
-  message: string;
-};
+export default function IssueBillForm() {
+  const [currentAccount] = useContext(CurrentAccountContext);
+  const { bank } = useContract({ currentAccount });
 
-export default function IssueBillForm({ message }: Props) {
   const [amount, setAmount] = useState("");
   const [recipient, setRecipient] = useState("");
 
   const onClickIssue = async () => {
-    alert(JSON.stringify(recipient) + ":" + JSON.stringify(amount));
+    if (!currentAccount) {
+      alert("connect wallet");
+      return;
+    }
+    if (!bank) return;
+    try {
+      const amountInWei = avaxToWei(amount);
+
+      const txn = await bank.issueBill(amountInWei, recipient);
+      await txn.wait();
+
+      alert("Success");
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (

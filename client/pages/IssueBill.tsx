@@ -6,7 +6,7 @@ export default function IssueBill() {
     <body>
       <Layout>
         <div className="flex justify-around bg-gradient-to-r from-sky-500 to-indigo-500 h-screen">
-          <IssueBillForm message={"IssueBill"} />
+          <IssueBillForm />
         </div>
       </Layout>
     </body>
