@@ -1,21 +1,10 @@
-import { useEffect, useState } from "react";
 import AllBillCards from "../components/Card/AllBillCards";
-import ViewAccountCard from "../components/Card/ViewAccountCard";
+import DishonoredCards from "../components/Card/DishonoredCards";
 import AdminForm from "../components/Form/AdminForm";
 import Layout from "../components/Layout/Layout";
 
-//TODO completeBill
+//TODO adminボタンの非表示
 export default function Admin() {
-  const [dishonoredAddresses, setDishonoredAddresses] = useState<string[]>([]);
-
-  useEffect(() => {
-    let s: string[] = [];
-    for (let index = 0; index < 5; index++) {
-      s.push("akiyama");
-    }
-    setDishonoredAddresses(s);
-  }, []);
-
   return (
     <body>
       <Layout>
@@ -27,17 +16,8 @@ export default function Admin() {
             <div className="my-20">
               <AdminForm />
             </div>
-            <div className="my-20 mx-20">
-              <div>dishonored</div>
-              {dishonoredAddresses.map((address, index) => {
-                return (
-                  <div key={index} className="flex justify-center">
-                    <div className="my-1">
-                      <ViewAccountCard address={address} />
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="my-20">
+              <DishonoredCards />
             </div>
           </div>
         </div>

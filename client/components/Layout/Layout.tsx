@@ -10,10 +10,10 @@ export default function Layout({ children }: Props) {
   return (
     <div>
       <header className="p-4 ">
-        <nav className="flex justify-between mx-auto container items-center ">
-          <div className="xl:flex">
+        <nav className="xl:flex lg:flex md:flex justify-between mx-auto container items-center">
+          <div className="xl:flex lg:flex md:flex items-center ">
             <div className="text-4xl"> AVAX Subnet </div>
-            <div className="space-x-12 font-bold mx-8 pt-2">
+            <div className="xl:flex lg:flex md:flex space-x-12 ml-8">
               <NavButton to="/" name="Home" />
               <NavButton to="/IssueBill" name="Issue Bill" />
               <NavButton to="/ViewBills" name="View Bills" />

@@ -31,7 +31,7 @@ export default function IssueBillForm() {
   };
 
   return (
-    <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm h-fit my-auto">
+    <div className="block p-6 rounded-lg shadow-lg bg-white h-fit mx-auto my-auto w-fit">
       <form>
         <InputField
           label="Amount of AVAX"

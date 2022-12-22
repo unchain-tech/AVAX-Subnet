@@ -20,7 +20,7 @@ export default function InputField({ label, placeholder, onChange }: Props) {
         }}
         className="form-control
         block
-        w-full
+        w-80
         px-3
         py-1.5
         text-base
