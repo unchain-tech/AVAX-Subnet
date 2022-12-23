@@ -40,9 +40,9 @@ contract Bank {
 
     constructor() payable {}
 
-    function sendAvax(address payable _to, uint256 _amount) private {
+    function sendToken(address payable _to, uint256 _amount) private {
         (bool success, ) = (_to).call{value: _amount}("");
-        require(success, "Failed to send AVAX");
+        require(success, "Failed to send token");
     }
 
     function getNumberOfBills() public view returns (uint256) {
@@ -106,7 +106,7 @@ contract Bank {
 
         uint256 amount = getAmountToCashBill(_id);
 
-        sendAvax(payable(msg.sender), amount);
+        sendToken(payable(msg.sender), amount);
     }
 
     function lockToken() public payable {

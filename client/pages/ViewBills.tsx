@@ -2,6 +2,7 @@ import Layout from "../components/Layout/Layout";
 import RecipientBillCards from "../components/Card/RecipientBillCards";
 import IssuerBillCards from "../components/Card/IssuerBillCards";
 
+//TODO: 現金化したbillと支払ったbillの色分けする
 export default function ViewBills() {
   return (
     <body>
