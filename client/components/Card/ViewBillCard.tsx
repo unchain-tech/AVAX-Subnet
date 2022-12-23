@@ -8,6 +8,7 @@ type Props = {
   bill: BillType;
 };
 
+//TODO 色かえる:せめてcompleteされたやつは色かえる
 export default function ViewBillCard({ title, button, onClick, bill }: Props) {
   return (
     <div className="my-10 block p-5 rounded-lg shadow-lg bg-white w-fit">
