@@ -116,6 +116,12 @@ contract Bank {
     function completeBill(uint256 _id) public payable {
         Bill storage bill = allBills[_id];
 
+        require(
+            bill.status == BillStatus.Issued ||
+                bill.status == BillStatus.Cashed,
+            "Bill is already completed"
+        );
+
         require(!beforeDueDate(_id), "Before due date");
 
         uint256 amount = getAmountToPayBill(_id);
