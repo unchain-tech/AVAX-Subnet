@@ -12,16 +12,8 @@ if (process.env.TEST_ACCOUNT_PRIVATE_KEY === undefined) {
 const config: HardhatUserConfig = {
   solidity: "0.8.17",
   networks: {
-    fuji: {
-      url: "https://api.avax-test.network/ext/bc/C/rpc",
-      chainId: 43113,
-      accounts:
-        process.env.TEST_ACCOUNT_PRIVATE_KEY !== undefined
-          ? [process.env.TEST_ACCOUNT_PRIVATE_KEY]
-          : [],
-    },
     local: {
-      url: "http://127.0.0.1:9654/ext/bc/2R4qowMXTHwbCLR9sq6zifRE4vgTPPbfJaNUYUzmDMeNoJqvHj/rpc",
+      url: "http://127.0.0.1:9654/ext/bc/2GNCWyC2db1w54MZukV3sTYTUphZXuFstdDaUwonrcBHZXnJg5/rpc",
       gasPrice: 225000000000,
       chainId: 321123,
       accounts:

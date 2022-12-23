@@ -37,14 +37,14 @@ describe("Bank", function () {
       const newId = 0;
 
       const bill = await bank.allBills(newId);
-      const activeStatus = 0;
+      const status = 0;
 
       expect(bill.id).to.equal(newId);
       expect(bill.amount).to.equal(amount);
       expect(bill.timestamp).to.equal(await getLastBlockTimeStamp());
       expect(bill.issuer).to.equal(issuer.address);
       expect(bill.recipient).to.equal(recipient.address);
-      expect(bill.status).to.equal(activeStatus);
+      expect(bill.status).to.equal(status);
     });
   });
 
@@ -116,8 +116,8 @@ describe("Bank", function () {
     });
   });
 
-  describe("Token is transferred correctly.", function () {
-    it("Token", async function () {
+  describe("lockToken", function () {
+    it("Token is transferred correctly.", async function () {
       const { bank, userAccounts } = await loadFixture(deployContract);
 
       const account = userAccounts[0];
