@@ -16,14 +16,6 @@ export default function ViewBillCard({
   onClick,
   bill,
 }: Props) {
-  let bgColor = "bg-white";
-
-  switch (bill.status) {
-    case BillStatus.Dishonored:
-      bgColor = "bg-red-300";
-      break;
-  }
-
   return (
     <div
       className={
