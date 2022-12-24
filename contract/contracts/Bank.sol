@@ -15,6 +15,7 @@ contract Bank {
     // 手形の状態を表します。
     enum BillStatus {
         Issued,
+        Paid,
         Cashed,
         Completed,
         Dishonored
@@ -98,7 +99,10 @@ contract Bank {
     function cashBill(uint256 _id) public payable {
         Bill storage bill = allBills[_id];
 
-        require(bill.status == BillStatus.Issued, "Status is not Isued");
+        require(
+            bill.status == BillStatus.Issued || bill.status == BillStatus.Paid,
+            "Status is not Isued or Paid"
+        );
 
         require(bill.recipient == msg.sender, "Your are not recipient");
 
@@ -109,7 +113,14 @@ contract Bank {
         sendToken(payable(msg.sender), amount);
     }
 
-    function lockToken() public payable {
+    function lockToken(uint256 _id) public payable {
+        Bill storage bill = allBills[_id];
+        uint256 amount = getAmountToPayBill(_id);
+
+        require(msg.value == amount, "Amount is not correct");
+
+        bill.status = BillStatus.Paid;
+
         balance[msg.sender] += msg.value;
     }
 
@@ -118,7 +129,8 @@ contract Bank {
 
         require(
             bill.status == BillStatus.Issued ||
-                bill.status == BillStatus.Cashed,
+                bill.status == BillStatus.Cashed ||
+                bill.status == BillStatus.Paid,
             "Bill is already completed"
         );
 

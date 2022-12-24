@@ -4,6 +4,14 @@ import { expect } from "chai";
 import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
 
 describe("Bank", function () {
+  enum BillStatus {
+    Issued,
+    Paid,
+    Cashed,
+    Completed,
+    Dishonored,
+  }
+
   async function getLastBlockTimeStamp() {
     const blockNumberBefore = await ethers.provider.getBlockNumber();
     const blockBefore = await ethers.provider.getBlock(blockNumberBefore);
@@ -37,14 +45,13 @@ describe("Bank", function () {
       const newId = 0;
 
       const bill = await bank.allBills(newId);
-      const status = 0;
 
       expect(bill.id).to.equal(newId);
       expect(bill.amount).to.equal(amount);
       expect(bill.timestamp).to.equal(await getLastBlockTimeStamp());
       expect(bill.issuer).to.equal(issuer.address);
       expect(bill.recipient).to.equal(recipient.address);
-      expect(bill.status).to.equal(status);
+      expect(bill.status).to.equal(BillStatus.Issued);
     });
   });
 
@@ -120,16 +127,24 @@ describe("Bank", function () {
     it("Token is transferred correctly.", async function () {
       const { bank, userAccounts } = await loadFixture(deployContract);
 
-      const account = userAccounts[0];
+      const issuer = userAccounts[0];
+      const recipient = userAccounts[1];
       const amount = BigNumber.from(100);
 
-      await expect(
-        bank.connect(account).lockToken({
-          value: amount,
-        } as Overrides)
-      ).to.changeEtherBalances([account, bank], [-amount, amount]);
+      await bank.connect(issuer).issueBill(amount, recipient.address);
+      const newId = 0;
 
-      expect(await bank.connect(account).getBalance()).to.equal(amount);
+      const interestRate = await bank.interestRate();
+      const amountWithFee = amount.add(amount.mul(interestRate).div(100));
+
+      await expect(
+        bank.connect(issuer).lockToken(newId, {
+          value: amountWithFee,
+        } as Overrides)
+      ).to.changeEtherBalances([issuer, bank], [-amountWithFee, amountWithFee]);
+
+      expect((await bank.allBills(newId)).status).to.equal(BillStatus.Paid);
+      expect(await bank.connect(issuer).getBalance()).to.equal(amountWithFee);
     });
   });
 
@@ -159,7 +174,7 @@ describe("Bank", function () {
 
       const interestRate = await bank.interestRate();
       const amountWithFee = amount.add(amount.mul(interestRate).div(100));
-      await bank.connect(issuer).lockToken({
+      await bank.connect(issuer).lockToken(newId, {
         value: amountWithFee,
       } as Overrides);
 
@@ -167,10 +182,11 @@ describe("Bank", function () {
       await time.increase(term);
 
       await bank.completeBill(newId);
-      const statusCompleted = 2;
 
       expect(await bank.connect(issuer).getBalance()).to.equal(0);
-      expect((await bank.allBills(newId)).status).to.equal(statusCompleted);
+      expect((await bank.allBills(newId)).status).to.equal(
+        BillStatus.Completed
+      );
     });
 
     it("Bill is properly dishonored.", async function () {
@@ -187,9 +203,10 @@ describe("Bank", function () {
       await time.increase(term);
 
       await bank.completeBill(newId);
-      const statusDishonored = 3;
 
-      expect((await bank.allBills(newId)).status).to.equal(statusDishonored);
+      expect((await bank.allBills(newId)).status).to.equal(
+        BillStatus.Dishonored
+      );
       expect(await bank.dishonoredAddresses(0)).to.equal(issuer.address);
     });
   });
