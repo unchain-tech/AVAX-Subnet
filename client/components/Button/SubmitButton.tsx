@@ -1,13 +1,15 @@
 type Props = {
   title: string;
+  disable: boolean;
   onClick: () => void;
 };
 
-export default function SubmitButton({ title, onClick }: Props) {
+export default function SubmitButton({ title, disable, onClick }: Props) {
   return (
     <button
       type="submit"
       onClick={onClick}
+      disabled={disable}
       className="
       px-6
       py-2.5

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { BillType, useContract } from "../../hooks/useContract";
+import { BillStatus, BillType, useContract } from "../../hooks/useContract";
 import { sameAddresses } from "../../utils/compare";
 import ViewBillCard from "./ViewBillCard";
 
@@ -31,7 +31,8 @@ export default function RecipientBillCards() {
       <div key={index}>
         <ViewBillCard
           title="Bill to cash"
-          button="cash"
+          buttonTitle="cash"
+          disable={BillStatus.Cashed <= bill.status}
           onClick={() => {
             onClickCash(index);
           }}

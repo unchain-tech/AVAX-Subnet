@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { BillType, useContract } from "../../hooks/useContract";
+import { BillStatus, BillType, useContract } from "../../hooks/useContract";
 import ViewBillCard from "./ViewBillCard";
 
 export default function AllBillCards() {
@@ -29,7 +29,8 @@ export default function AllBillCards() {
       <div key={index}>
         <ViewBillCard
           title="Bill"
-          button="complete"
+          buttonTitle="complete"
+          disable={BillStatus.Completed <= bill.status}
           onClick={() => {
             onClickComplete(index);
           }}

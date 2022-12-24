@@ -15,12 +15,12 @@ export type BillType = {
   dueDate: Date;
   issuer: string;
   recipient: string;
-  active: boolean;
+  status: number;
 };
 
-//TODO: これ使って色分け
 export enum BillStatus {
   Issued,
+  Paid,
   Cashed,
   Completed,
   Dishonored,
@@ -94,7 +94,7 @@ export const useContract = ({
           dueDate: blockTimeStampToDate(billOrigin.timestamp.add(term)),
           issuer: billOrigin.issuer,
           recipient: billOrigin.recipient,
-          active: true,
+          status: billOrigin.status,
         };
 
         setBills((prevState) => [...prevState, bill]);
