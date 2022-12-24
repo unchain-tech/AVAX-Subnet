@@ -25,7 +25,9 @@ export default function AdminButton() {
     getAdminAddress();
   }, [txAllowList, getAdminAddress]);
 
-  return (
-    <div>{isAdmin ? <NavButton to="/Admin" name="Admin" /> : <div></div>}</div>
-  );
+  if (isAdmin) {
+    return <NavButton to="/Admin" name="Admin" />;
+  }
+
+  return <div></div>;
 }
