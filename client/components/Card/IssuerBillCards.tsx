@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { BillStatus, BillType, useContract } from "../../hooks/useContract";
+import { BillType, useContract } from "../../hooks/useContract";
 import { sameAddresses } from "../../utils/compare";
 import ViewBillCard from "./ViewBillCard";
 
@@ -34,7 +34,7 @@ export default function IssuerBillCards() {
         <ViewBillCard
           title="Bill to pay"
           buttonTitle="pay"
-          disable={BillStatus.Paid <= bill.status}
+          disable={false}
           onClick={() => {
             onClickPay(index);
           }}

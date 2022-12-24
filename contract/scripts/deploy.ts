@@ -4,9 +4,11 @@ import { Overrides } from "ethers";
 async function deploy() {
   const [deployer] = await ethers.getSigners();
 
+  const fund = ethers.utils.parseEther("200");
+
   const Bank = await ethers.getContractFactory("Bank");
   const bank = await Bank.deploy({
-    value: 10000,
+    value: fund,
   } as Overrides);
   await bank.deployed();
 

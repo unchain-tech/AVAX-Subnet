@@ -17,8 +17,8 @@ export default function AdminForm() {
     if (!txAllowList) return;
     try {
       const txn = await txAllowList.setEnabled(address);
-      txn.wait();
-      alert("success");
+      await txn.wait();
+      alert("Success");
     } catch (error) {
       // https://www.freecodecamp.org/news/object-object-in-javascript-meaning-in-js/
       alert(JSON.stringify(error));
@@ -33,8 +33,8 @@ export default function AdminForm() {
     if (!txAllowList) return;
     try {
       const txn = await txAllowList.setNone(address);
-      txn.wait();
-      alert("success");
+      await txn.wait();
+      alert("Success");
     } catch (error) {
       alert(JSON.stringify(error));
     }
