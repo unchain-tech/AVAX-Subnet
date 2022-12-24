@@ -3,12 +3,10 @@ import Layout from "../components/Layout/Layout";
 
 export default function IssueBill() {
   return (
-    <body>
-      <Layout>
-        <div className="flex bg-gradient-to-r from-sky-500 to-indigo-500 h-screen">
-          <IssueBillForm />
-        </div>
-      </Layout>
-    </body>
+    <Layout>
+      <div className="flex bg-gradient-to-r from-sky-500 to-indigo-500 h-screen">
+        <IssueBillForm />
+      </div>
+    </Layout>
   );
 }
