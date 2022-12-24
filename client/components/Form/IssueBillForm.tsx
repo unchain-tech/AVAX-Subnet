@@ -43,7 +43,7 @@ export default function IssueBillForm() {
           placeholder="Enter the address of recipient"
           onChange={(value) => setRecipient(value)}
         />
-        <SubmitButton title="issue" disable={true} onClick={onClickIssue} />
+        <SubmitButton title="issue" disable={false} onClick={onClickIssue} />
       </form>
     </div>
   );
