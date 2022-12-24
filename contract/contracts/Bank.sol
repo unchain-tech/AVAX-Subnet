@@ -13,6 +13,7 @@ contract Bank {
     }
 
     // 手形の状態を表します。
+    // TODO: PaidとCashedは非同期な状態なので, 同じステータスで扱うものではない
     enum BillStatus {
         Issued,
         Paid,
