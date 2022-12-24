@@ -9,7 +9,7 @@ export default function AdminForm() {
   const { txAllowList } = useContract({ currentAccount });
   const [address, setAddress] = useState("");
 
-  const onEnable = useCallback(async () => {
+  const onEnable = async () => {
     if (!currentAccount) {
       alert("connect wallet");
       return;
@@ -23,9 +23,9 @@ export default function AdminForm() {
       // https://www.freecodecamp.org/news/object-object-in-javascript-meaning-in-js/
       alert(JSON.stringify(error));
     }
-  }, [currentAccount, txAllowList, address]);
+  };
 
-  const onNone = useCallback(async () => {
+  const onNone = async () => {
     if (!currentAccount) {
       alert("connect wallet");
       return;
@@ -38,7 +38,7 @@ export default function AdminForm() {
     } catch (error) {
       alert(JSON.stringify(error));
     }
-  }, [currentAccount, txAllowList, address]);
+  };
 
   return (
     <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm h-fit mx-auto">
