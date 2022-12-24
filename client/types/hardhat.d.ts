@@ -17,10 +17,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Bank__factory>;
     getContractFactory(
-      name: "Counter",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Counter__factory>;
-    getContractFactory(
       name: "IAllowList",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IAllowList__factory>;
@@ -30,11 +26,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Bank>;
-    getContractAt(
-      name: "Counter",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Counter>;
     getContractAt(
       name: "IAllowList",
       address: string,

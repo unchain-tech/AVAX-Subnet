@@ -2,9 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Bank } from "./Bank";
-export type { Counter } from "./Counter";
 export type { IAllowList } from "./IAllowList";
 export * as factories from "./factories";
 export { Bank__factory } from "./factories/Bank__factory";
-export { Counter__factory } from "./factories/Counter__factory";
 export { IAllowList__factory } from "./factories/IAllowList__factory";

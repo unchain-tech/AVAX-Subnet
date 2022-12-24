@@ -17,7 +17,7 @@ export default function IssuerBillCards() {
     try {
       const amount = await bank.getAmountToPayBill(id);
 
-      const txn = await bank.lockToken({ value: amount });
+      const txn = await bank.lockToken(id, { value: amount });
       await txn.wait();
 
       alert("Success");

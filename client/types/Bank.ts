@@ -39,7 +39,7 @@ export interface BankInterface extends utils.Interface {
     "getNumberOfDishonoredAddresses()": FunctionFragment;
     "interestRate()": FunctionFragment;
     "issueBill(uint256,address)": FunctionFragment;
-    "lockToken()": FunctionFragment;
+    "lockToken(uint256)": FunctionFragment;
     "term()": FunctionFragment;
   };
 
@@ -114,7 +114,10 @@ export interface BankInterface extends utils.Interface {
     functionFragment: "issueBill",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "lockToken", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "lockToken",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "term", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "allBills", data: BytesLike): Result;
@@ -253,6 +256,7 @@ export interface Bank extends BaseContract {
     ): Promise<ContractTransaction>;
 
     lockToken(
+      _id: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -320,6 +324,7 @@ export interface Bank extends BaseContract {
   ): Promise<ContractTransaction>;
 
   lockToken(
+    _id: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -388,7 +393,10 @@ export interface Bank extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    lockToken(overrides?: CallOverrides): Promise<void>;
+    lockToken(
+      _id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     term(overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -450,6 +458,7 @@ export interface Bank extends BaseContract {
     ): Promise<BigNumber>;
 
     lockToken(
+      _id: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -511,6 +520,7 @@ export interface Bank extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     lockToken(
+      _id: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
