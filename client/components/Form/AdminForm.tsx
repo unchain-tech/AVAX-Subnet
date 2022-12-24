@@ -49,8 +49,8 @@ export default function AdminForm() {
           onChange={(value) => setAddress(value)}
         />
         <div className="flex justify-between">
-          <SubmitButton title="enable" onClick={onEnable} />
-          <SubmitButton title="none" onClick={onNone} />
+          <SubmitButton title="enable" disable={true} onClick={onEnable} />
+          <SubmitButton title="none" disable={true} onClick={onNone} />
         </div>
       </form>
     </div>
