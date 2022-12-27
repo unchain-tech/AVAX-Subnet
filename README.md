@@ -2,7 +2,13 @@
 
 Dapp that acts as a bank for bill transactions.
 
-### UI
+chain: Avalanche Subnet (local・EVM)
+
+contract: solidity
+
+frontend: Typescript + React + Next.js
+
+### frontend overview
 
 The project assumes that the blockchain nodes on the local network are working.
 
