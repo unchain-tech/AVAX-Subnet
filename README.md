@@ -8,7 +8,7 @@ Dapp that acts as a bank for bill transactions.
 
 `frontend`: Typescript + React + Next.js
 
-### frontend overview
+### Frontend overview
 
 The project assumes that the blockchain nodes on the local network are working.
 
