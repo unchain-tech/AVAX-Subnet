@@ -1,12 +1,12 @@
-# About The Project
+### About The Project
 
 Dapp that acts as a bank for bill transactions.
 
-chain: Avalanche Subnet (local・EVM)
+`chain`: Avalanche Subnet (local・EVM)
 
-contract: solidity
+`contract`: solidity
 
-frontend: Typescript + React + Next.js
+`frontend`: Typescript + React + Next.js
 
 ### frontend overview
 
