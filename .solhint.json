@@ -18,7 +18,7 @@
     "imports-on-top": "error",
     "multiple-sends": "warn",
     "no-complex-fallback": "warn",
-    "no-empty-blocks": "error",
+    "no-empty-blocks": "warn",
     "no-global-import": "off",
     "no-unused-vars": "error",
     "private-vars-leading-underscore": [
