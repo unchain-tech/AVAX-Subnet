@@ -35,10 +35,10 @@ contract Bank {
     uint256 public constant TERM = 1 days * 60;
 
     // 割引金利
-    uint256 public constant DISCOUNTRATE = 10;
+    uint256 public constant DISCOUNT_RATE = 10;
 
     // 手形手数料
-    uint256 public constant INTERESTRATE = 10;
+    uint256 public constant INTEREST_RATE = 10;
 
     constructor() payable {}
 
@@ -73,7 +73,7 @@ contract Bank {
         Bill memory bill = allBills[_id];
 
         if (beforeDueDate(_id)) {
-            return (bill.amount * (100 - DISCOUNTRATE)) / 100;
+            return (bill.amount * (100 - DISCOUNT_RATE)) / 100;
         }
 
         return bill.amount;
@@ -81,7 +81,7 @@ contract Bank {
 
     function getAmountToPayBill(uint256 _id) public view returns (uint256) {
         Bill memory bill = allBills[_id];
-        return (bill.amount * (100 + DISCOUNTRATE)) / 100;
+        return (bill.amount * (100 + DISCOUNT_RATE)) / 100;
     }
 
     function issueBill(uint256 _amount, address _recipient) public {
