@@ -1,8 +1,7 @@
+// 環境構築時にこのパッケージはインストールしてあります。
 import * as dotenv from 'dotenv';
 import '@nomicfoundation/hardhat-toolbox';
 import { HardhatUserConfig } from 'hardhat/config';
-
-// 環境構築時にこのパッケージはインストールしてあります。
 
 // .envファイルから環境変数をロードします。
 dotenv.config();
