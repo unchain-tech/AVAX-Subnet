@@ -1,0 +1,25 @@
+{
+  "name": "avax-subnet",
+  "version": "1.0.0",
+  "description": "AVAX Subnet",
+  "license": "",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unchain-tech/AVAX-Subnet.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/unchain-tech/AVAX-Subnet/issues"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "contract": "yarn workspace contract",
+    "client": "yarn workspace client",
+    "test": "yarn contract test"
+  }
+}
