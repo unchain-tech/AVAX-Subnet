@@ -1,5 +1,6 @@
-import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { useContext } from "react";
+import { useContext } from 'react';
+
+import CurrentAccountContext from '../../context/CurrentAccountProvider';
 
 export default function ConnectWalletButton() {
   const [currentAccount, connectWallet] = useContext(CurrentAccountContext);
@@ -19,8 +20,8 @@ export default function ConnectWalletButton() {
           className="rounded px-2 py-1
         bg-slate-400 text-white"
         >
-          {" "}
-          {"Connected to " + currentAccount}{" "}
+          {' '}
+          {'Connected to ' + currentAccount}{' '}
         </div>
       )}
     </div>

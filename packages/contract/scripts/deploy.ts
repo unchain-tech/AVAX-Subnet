@@ -1,19 +1,19 @@
-import { ethers } from "hardhat";
-import { Overrides } from "ethers";
+import { Overrides } from 'ethers';
+import { ethers } from 'hardhat';
 
 async function deploy() {
   const [deployer] = await ethers.getSigners();
 
-  const fund = ethers.utils.parseEther("200");
+  const fund = ethers.utils.parseEther('200');
 
-  const Bank = await ethers.getContractFactory("Bank");
+  const Bank = await ethers.getContractFactory('Bank');
   const bank = await Bank.deploy({
     value: fund,
   } as Overrides);
   await bank.deployed();
 
-  console.log("bank address:", bank.address);
-  console.log("deployer address:", deployer.address);
+  console.log('bank address:', bank.address);
+  console.log('deployer address:', deployer.address);
 }
 
 deploy()

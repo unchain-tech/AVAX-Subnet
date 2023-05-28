@@ -1,7 +1,8 @@
-import { useContext } from "react";
-import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { BillStatus, BillType, useContract } from "../../hooks/useContract";
-import ViewBillCard from "./ViewBillCard";
+import { useContext } from 'react';
+
+import CurrentAccountContext from '../../context/CurrentAccountProvider';
+import { BillStatus, BillType, useContract } from '../../hooks/useContract';
+import ViewBillCard from './ViewBillCard';
 
 export default function AllBillCards() {
   const [currentAccount] = useContext(CurrentAccountContext);
@@ -9,7 +10,7 @@ export default function AllBillCards() {
 
   const onClickComplete = async (id: number) => {
     if (!currentAccount) {
-      alert("connect wallet");
+      alert('connect wallet');
       return;
     }
     if (!bank) return;
@@ -17,7 +18,7 @@ export default function AllBillCards() {
       const txn = await bank.completeBill(id);
       await txn.wait();
 
-      alert("Success");
+      alert('Success');
     } catch (error) {
       alert(error);
     }

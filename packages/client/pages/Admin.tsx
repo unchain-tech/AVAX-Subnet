@@ -1,7 +1,7 @@
-import AllBillCards from "../components/Card/AllBillCards";
-import DishonoredCards from "../components/Card/DishonoredCards";
-import AdminForm from "../components/Form/AdminForm";
-import Layout from "../components/Layout/Layout";
+import AllBillCards from '../components/Card/AllBillCards';
+import DishonoredCards from '../components/Card/DishonoredCards';
+import AdminForm from '../components/Form/AdminForm';
+import Layout from '../components/Layout/Layout';
 
 export default function Admin() {
   return (

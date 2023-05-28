@@ -1,24 +1,25 @@
-import { useContext, useState } from "react";
-import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { useContract } from "../../hooks/useContract";
-import SubmitButton from "../Button/SubmitButton";
-import InputField from "../Field/InputField";
+import { useContext, useState } from 'react';
+
+import CurrentAccountContext from '../../context/CurrentAccountProvider';
+import { useContract } from '../../hooks/useContract';
+import SubmitButton from '../Button/SubmitButton';
+import InputField from '../Field/InputField';
 
 export default function AdminForm() {
   const [currentAccount] = useContext(CurrentAccountContext);
   const { txAllowList } = useContract({ currentAccount });
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState('');
 
   const onEnable = async () => {
     if (!currentAccount) {
-      alert("connect wallet");
+      alert('connect wallet');
       return;
     }
     if (!txAllowList) return;
     try {
       const txn = await txAllowList.setEnabled(address);
       await txn.wait();
-      alert("Success");
+      alert('Success');
     } catch (error) {
       // https://www.freecodecamp.org/news/object-object-in-javascript-meaning-in-js/
       alert(JSON.stringify(error));
@@ -27,14 +28,14 @@ export default function AdminForm() {
 
   const onNone = async () => {
     if (!currentAccount) {
-      alert("connect wallet");
+      alert('connect wallet');
       return;
     }
     if (!txAllowList) return;
     try {
       const txn = await txAllowList.setNone(address);
       await txn.wait();
-      alert("Success");
+      alert('Success');
     } catch (error) {
       alert(JSON.stringify(error));
     }

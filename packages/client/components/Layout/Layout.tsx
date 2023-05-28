@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
-import AdminButton from "../Button/AdminButton";
-import ConnectWalletButton from "../Button/ConnectWalletButton";
-import NavButton from "../Button/NavButton";
+import { ReactNode } from 'react';
+
+import AdminButton from '../Button/AdminButton';
+import ConnectWalletButton from '../Button/ConnectWalletButton';
+import NavButton from '../Button/NavButton';
 
 type Props = {
   children: ReactNode;

@@ -1,7 +1,8 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { TxAllowListRole, useContract } from "../../hooks/useContract";
-import NavButton from "./NavButton";
+import { useCallback, useContext, useEffect, useState } from 'react';
+
+import CurrentAccountContext from '../../context/CurrentAccountProvider';
+import { TxAllowListRole, useContract } from '../../hooks/useContract';
+import NavButton from './NavButton';
 
 export default function AdminButton() {
   const [currentAccount] = useContext(CurrentAccountContext);
@@ -32,9 +33,9 @@ export default function AdminButton() {
       )}
       <div>
         role:
-        {role === TxAllowListRole.None ? "None" : ""}
-        {role === TxAllowListRole.Enabled ? "Enabled" : ""}
-        {role === TxAllowListRole.Admin ? "Admin" : ""}
+        {role === TxAllowListRole.None ? 'None' : ''}
+        {role === TxAllowListRole.Enabled ? 'Enabled' : ''}
+        {role === TxAllowListRole.Admin ? 'Admin' : ''}
       </div>
     </div>
   );

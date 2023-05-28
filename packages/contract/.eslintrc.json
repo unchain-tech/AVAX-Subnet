@@ -1,10 +1,6 @@
 {
-  "extends": [
-    "../../.eslintrc.json"
-  ],
-  "plugins": [
-    "node"
-  ],
+  "extends": ["../../.eslintrc.json"],
+  "plugins": ["node"],
   "rules": {
     "node/no-extraneous-import": [
       "error",
@@ -19,26 +15,21 @@
     "node/no-unsupported-features/es-syntax": [
       "error",
       {
-        "ignores": [
-          "modules"
-        ]
+        "ignores": ["modules"]
       }
     ],
-    "node/no-unpublished-require": [
-      "warn"
-    ],
+    "node/no-unpublished-require": ["warn"],
     "node/no-unpublished-import": [
       "warn",
       {
         "allowModules": [
+          "chai",
           "hardhat",
           "@nomicfoundation/hardhat-network-helpers",
           "@nomicfoundation/hardhat-toolbox"
         ]
       }
     ],
-    "node/no-missing-import": [
-      "warn"
-    ]
+    "node/no-missing-import": ["warn"]
   }
 }

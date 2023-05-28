@@ -1,20 +1,21 @@
-import { useContext, useState } from "react";
-import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { useContract } from "../../hooks/useContract";
-import { avaxToWei } from "../../utils/formatter";
-import SubmitButton from "../Button/SubmitButton";
-import InputField from "../Field/InputField";
+import { useContext, useState } from 'react';
+
+import CurrentAccountContext from '../../context/CurrentAccountProvider';
+import { useContract } from '../../hooks/useContract';
+import { avaxToWei } from '../../utils/formatter';
+import SubmitButton from '../Button/SubmitButton';
+import InputField from '../Field/InputField';
 
 export default function IssueBillForm() {
   const [currentAccount] = useContext(CurrentAccountContext);
   const { bank } = useContract({ currentAccount });
 
-  const [amount, setAmount] = useState("");
-  const [recipient, setRecipient] = useState("");
+  const [amount, setAmount] = useState('');
+  const [recipient, setRecipient] = useState('');
 
   const onClickIssue = async () => {
     if (!currentAccount) {
-      alert("connect wallet");
+      alert('connect wallet');
       return;
     }
     if (!bank) return;
@@ -24,7 +25,7 @@ export default function IssueBillForm() {
       const txn = await bank.issueBill(amountInWei, recipient);
       await txn.wait();
 
-      alert("Success");
+      alert('Success');
     } catch (error) {
       alert(error);
     }

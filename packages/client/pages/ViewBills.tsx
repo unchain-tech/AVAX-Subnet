@@ -1,6 +1,6 @@
-import Layout from "../components/Layout/Layout";
-import RecipientBillCards from "../components/Card/RecipientBillCards";
-import IssuerBillCards from "../components/Card/IssuerBillCards";
+import IssuerBillCards from '../components/Card/IssuerBillCards';
+import RecipientBillCards from '../components/Card/RecipientBillCards';
+import Layout from '../components/Layout/Layout';
 
 export default function ViewBills() {
   return (

@@ -1,8 +1,9 @@
-import { useContext } from "react";
-import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { BillType, useContract } from "../../hooks/useContract";
-import { sameAddresses } from "../../utils/compare";
-import ViewBillCard from "./ViewBillCard";
+import { useContext } from 'react';
+
+import CurrentAccountContext from '../../context/CurrentAccountProvider';
+import { BillType, useContract } from '../../hooks/useContract';
+import { sameAddresses } from '../../utils/compare';
+import ViewBillCard from './ViewBillCard';
 
 export default function IssuerBillCards() {
   const [currentAccount] = useContext(CurrentAccountContext);
@@ -10,7 +11,7 @@ export default function IssuerBillCards() {
 
   const onClickPay = async (id: number) => {
     if (!currentAccount) {
-      alert("connect wallet");
+      alert('connect wallet');
       return;
     }
     if (!bank) return;
@@ -20,7 +21,7 @@ export default function IssuerBillCards() {
       const txn = await bank.lockToken(id, { value: amount });
       await txn.wait();
 
-      alert("Success");
+      alert('Success');
     } catch (error) {
       alert(error);
     }

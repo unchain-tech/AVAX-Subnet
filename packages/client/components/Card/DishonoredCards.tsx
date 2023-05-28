@@ -1,6 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import CurrentAccountContext from "../../context/CurrentAccountProvider";
-import { useContract } from "../../hooks/useContract";
+import { useCallback, useContext, useEffect, useState } from 'react';
+
+import CurrentAccountContext from '../../context/CurrentAccountProvider';
+import { useContract } from '../../hooks/useContract';
 
 export default function DishonoredCards() {
   const [currentAccount] = useContext(CurrentAccountContext);

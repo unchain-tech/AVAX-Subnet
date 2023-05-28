@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
-import { ethers } from "ethers";
-import BankAbi from "../artifacts/Bank.json";
-import TxAllowListAbi from "../artifacts/IAllowList.json";
-import { Bank as BankType } from "../types";
-import { IAllowList as TxAllowListType } from "../types";
-import { getEthereum } from "../utils/ethereum";
-import { blockTimeStampToDate, weiToAvax } from "../utils/formatter";
+import { ethers } from 'ethers';
+import { useCallback, useEffect, useState } from 'react';
 
-export const BankAddress = "0x8C6dFbFC0b3e83cBBB82E4b5A187Bc9C0EcE0630";
-export const TxAllowListAddress = "0x0200000000000000000000000000000000000002";
+import BankAbi from '../artifacts/Bank.json';
+import TxAllowListAbi from '../artifacts/IAllowList.json';
+import { Bank as BankType } from '../types';
+import { IAllowList as TxAllowListType } from '../types';
+import { getEthereum } from '../utils/ethereum';
+import { blockTimeStampToDate, weiToAvax } from '../utils/formatter';
+
+export const BankAddress = '0x8C6dFbFC0b3e83cBBB82E4b5A187Bc9C0EcE0630';
+export const TxAllowListAddress = '0x0200000000000000000000000000000000000002';
 
 export type BillType = {
   amount: string;
@@ -55,7 +56,7 @@ export const useContract = ({
     (
       contractAddress: string,
       abi: ethers.ContractInterface,
-      storeContract: (_: ethers.Contract) => void
+      storeContract: (_: ethers.Contract) => void,
     ) => {
       if (!ethereum) {
         console.log("Ethereum object doesn't exist!");
@@ -68,8 +69,9 @@ export const useContract = ({
         return;
       }
       try {
-        // @ts-ignore: ethereum as ethers.providers.ExternalProvider
-        const provider = new ethers.providers.Web3Provider(ethereum);
+        const provider = new ethers.providers.Web3Provider(
+          ethereum as unknown as ethers.providers.ExternalProvider,
+        );
         const signer = provider.getSigner(); // 簡易実装のため, 引数なし = 初めのアカウント(account#0)を使用する
         const Contract = new ethers.Contract(contractAddress, abi, signer);
         storeContract(Contract);
@@ -77,7 +79,7 @@ export const useContract = ({
         console.log(error);
       }
     },
-    [ethereum, currentAccount]
+    [ethereum, currentAccount],
   );
 
   const getBills = useCallback(async () => {
@@ -113,7 +115,7 @@ export const useContract = ({
       TxAllowListAbi.abi,
       (Contract: ethers.Contract) => {
         setTxAllowList(Contract as TxAllowListType);
-      }
+      },
     );
   }, [ethereum, currentAccount, getContract]);
 

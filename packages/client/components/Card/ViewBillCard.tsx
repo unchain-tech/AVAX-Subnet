@@ -1,5 +1,5 @@
-import { BillStatus, BillType } from "../../hooks/useContract";
-import SubmitButton from "../Button/SubmitButton";
+import { BillStatus, BillType } from '../../hooks/useContract';
+import SubmitButton from '../Button/SubmitButton';
 
 type Props = {
   title: string;
@@ -19,9 +19,9 @@ export default function ViewBillCard({
   return (
     <div
       className={
-        "my-10 block p-5 rounded-lg shadow-lg w-fit" +
-        " " +
-        (bill.status === BillStatus.Dishonored ? "bg-red-300" : "bg-white")
+        'my-10 block p-5 rounded-lg shadow-lg w-fit' +
+        ' ' +
+        (bill.status === BillStatus.Dishonored ? 'bg-red-300' : 'bg-white')
       }
     >
       <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">
